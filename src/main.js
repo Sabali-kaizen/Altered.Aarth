@@ -17,7 +17,7 @@ const camera = new THREE.PerspectiveCamera(
         1000
         );
 
-        camera.position.set(0, 2.4, 7.5);
+        camera.position.set(0, 4.5, 10);
         camera.lookAt(0, 1.2, 0);
 
         const renderer = new THREE.WebGLRenderer({
@@ -94,7 +94,7 @@ const camera = new THREE.PerspectiveCamera(
                           fireEye = gltf.userData.vrm;
 
                               fireEye.scene.position.set(0, 0, 0);
-                                  fireEye.scene.rotation.y = Math.PI;
+                                  fireEye.scene.rotation.y = 0;
 
                                       scene.add(fireEye.scene);
 
@@ -113,7 +113,7 @@ const camera = new THREE.PerspectiveCamera(
                                                                           );
 
                                                                             loader.load(
-                                                                                  './animations/VRMA_01.vrma',
+                                                                                  './animations/VRMA_07.vrma',
                                                                                       (gltf) => {
                                                                                               fireEyeAnimation = gltf.userData.vrmAnimations[0];
                                                                                               playFireEyeAnimation();
