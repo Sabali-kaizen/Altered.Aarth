@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
 import { PLYLoader } from 'three/examples/jsm/Addons.js';
+import { VRMAnimationLoaderPlugin } from '@pixiv/three-vrm-animation';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x12051f);
@@ -61,7 +62,14 @@ const camera = new THREE.PerspectiveCamera(
                   return new VRMLoaderPlugin(parser);
                   });
 
+                loader.register((parser) => {
+                  return new
+                  VRMAnimationLoaderPlugin(parser);
+                });
+
                   let fireEye = null;
+                  let fireEyeAnimation = null;
+                  let animationMixer = null;
 
                   loader.load(
                     '/avatar/FireEye.vrm',
@@ -84,8 +92,20 @@ const camera = new THREE.PerspectiveCamera(
                                                                       (error) => {
                                                                           console.error('FireEye failed to load:', error);
                                                                             }
-                                                                            );  
+                                                                            );
 
+                                                                            loader.load(
+                                                                                  './animations/VRMA_01.vrma',
+                                                                                      (gltf) => {
+                                                                                              fireEyeAnimation = gltf.userData.vrmAnimation;
+                                                                                                      console.log('VRMA_01 loaded:', fireEyeAnimation);
+                                                                                                          },
+                                                                                                              undefined,
+                                                                                                                  (error) => {
+                                                                                                                          console.error('VRMA_01 failed to load:', error);
+                                                                                                                              }
+                                                                                                                              );
+                                                                            
           const groundGeometry = new THREE.PlaneGeometry(100, 100);
           const groundMaterial = new THREE.MeshStandardMaterial({
             color: 0x17121f,
@@ -108,10 +128,6 @@ const camera = new THREE.PerspectiveCamera(
             requestAnimationFrame(animate);
 
               const delta = clock.getDelta();
-
-              fireEye.scene.rotation.y += 0.01;
-              fireEye.scene.rotation.y = 
-            Math.sin(Date.now() * 0.002) * 0.15;
 
                 renderer.render(scene, camera);
                 }
