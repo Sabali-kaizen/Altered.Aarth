@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
 import { PLYLoader } from 'three/examples/jsm/Addons.js';
-import { VRMAnimationLoaderPlugin } from '@pixiv/three-vrm-animation';
+import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
+import * as VRMAnimation from '@pixiv/three-vrm-animation';
+import { deltaTime } from 'three/tsl';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x12051f);
@@ -71,6 +73,21 @@ const camera = new THREE.PerspectiveCamera(
                   let fireEyeAnimation = null;
                   let animationMixer = null;
 
+                  function playFireEyeAnimation() {
+                        if (!fireEye || !fireEyeAnimation) return;
+
+                            const clip = createVRMAnimationClip(
+                                    fireEyeAnimation,
+                                            fireEye
+                                                );
+
+                                                    animationMixer = new THREE.AnimationMixer(fireEye.scene);
+
+                                                        const action = animationMixer.clipAction(clip);
+                                                            action.play();
+
+                                                                console.log('FireEye animation started!');
+                                                                }
                   loader.load(
                     '/avatar/FireEye.vrm',
                       (gltf) => {
@@ -82,6 +99,7 @@ const camera = new THREE.PerspectiveCamera(
                                       scene.add(fireEye.scene);
 
                                           console.log('FireEye loaded successfully!');
+                                          playFireEyeAnimation();
                                             },
                                               (progress) => {
                                                   console.log(
@@ -92,12 +110,13 @@ const camera = new THREE.PerspectiveCamera(
                                                                       (error) => {
                                                                           console.error('FireEye failed to load:', error);
                                                                             }
-                                                                            );
+                                                                          );
 
                                                                             loader.load(
                                                                                   './animations/VRMA_01.vrma',
                                                                                       (gltf) => {
-                                                                                              fireEyeAnimation = gltf.userData.vrmAnimation;
+                                                                                              fireEyeAnimation = gltf.userData.vrmAnimations[0];
+                                                                                              playFireEyeAnimation();
                                                                                                       console.log('VRMA_01 loaded:', fireEyeAnimation);
                                                                                                           },
                                                                                                               undefined,
@@ -127,10 +146,17 @@ const camera = new THREE.PerspectiveCamera(
           function animate() {
             requestAnimationFrame(animate);
 
-              const delta = clock.getDelta();
+            const deltaTime = clock.getDelta();
 
-                renderer.render(scene, camera);
-                }
+            if (animationMixer) {animationMixer.update(deltaTime);
+            }
+
+            if (fireEye) {
+              fireEye.update(deltaTime);
+            }
+
+            renderer.render(scene, camera);
+         }
 
                 animate();
 
