@@ -111,6 +111,7 @@ const camera = new THREE.PerspectiveCamera(
                   let moveSpeed = 0;
                   let moveDirection = new THREE.Vector3();
 
+                  moveSpeed = 2;
                   moveDirection.set(0, 0, -1);
 
                   let idleAnimation = null;
@@ -243,11 +244,20 @@ const camera = new THREE.PerspectiveCamera(
             if (animationMixer) {
                   animationMixer.update(clock.getDelta());
                   }
-            
 
+                  if (fireEye) {
+                        camera.position.x = fireEye.scene.position.x;
+                            camera.position.z = fireEye.scene.position.z + 12;
+
+                                camera.lookAt(
+                                        fireEye.scene.position.x,
+                                                fireEye.scene.position.y + 2,
+                                                        fireEye.scene.position.z
+                                                            );
+                                                            }
+                  
             renderer.render(scene, camera);
-          }
-
+                                                          }
                 animate();
 
                 window.addEventListener('resize', () => {
