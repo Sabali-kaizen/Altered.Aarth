@@ -110,10 +110,6 @@ const camera = new THREE.PerspectiveCamera(
                   let fireEye = null;
                   let moveSpeed = 0;
                   let moveDirection = new THREE.Vector3();
-
-                  moveSpeed = 2;
-                  moveDirection.set(0, 0, -1);
-
                   let idleAnimation = null;
                   let walkAnimation = null;
                   let runAnimation = null;
@@ -132,7 +128,7 @@ const camera = new THREE.PerspectiveCamera(
 
                                                         const action = animationMixer.clipAction(clip);
                                                             action.play();
-
+                                                            
                                                                 console.log('FireEye animation started!');
                                                                 }
 
@@ -144,6 +140,11 @@ const camera = new THREE.PerspectiveCamera(
                                                                                               moveDirection,
                                                                                                           moveSpeed * deltaTime
                                                                                                                   );
+                                                                                                                  const angle = Math.atan2(
+                                                                                                                    moveDirection.x,
+                                                                                                                    moveDirection.z
+                                                                                                                  );
+                                                                                                                  fireEye.scene.rotation.y = angle + Math.PI;
                                                                                                                       }
                                                                                                                       }
                                                                 
@@ -255,11 +256,130 @@ const camera = new THREE.PerspectiveCamera(
                                                         fireEye.scene.position.z
                                                             );
                                                             }
-                  
             renderer.render(scene, camera);
                                                           }
                 animate();
 
+                // ===============================
+                // FIRE EYE MOVEMENT JOYSTICK
+                // ===============================
+
+                const joystick = document.createElement('div');
+
+                joystick.style.position = 'fixed';
+                joystick.style.left = '30px';
+                joystick.style.bottom = '30px';
+                joystick.style.width = '120px';
+                joystick.style.height = '120px';
+                joystick.style.border = '2px solid rgba(255,255,255,0.35)';
+                joystick.style.borderRadius = '50%';
+                joystick.style.background = 'rgba(255,255,255,0.08)';
+                joystick.style.zIndex = '1000';
+                joystick.style.touchAction = 'none';
+
+                document.body.appendChild(joystick);
+
+
+                const joystickKnob = document.createElement('div');
+
+                joystickKnob.style.position = 'absolute';
+                joystickKnob.style.left = '35px';
+                joystickKnob.style.top = '35px';
+                joystickKnob.style.width = '50px';
+                joystickKnob.style.height = '50px';
+                joystickKnob.style.borderRadius = '50%';
+                joystickKnob.style.background = 'rgba(255,255,255,0.35)';
+                joystickKnob.style.pointerEvents = 'none';
+
+                joystick.appendChild(joystickKnob);
+
+
+                let joystickActive = false;
+
+
+                joystick.addEventListener('pointerdown', (event) => {
+                    event.preventDefault();
+                        event.stopPropagation();
+
+                            joystickActive = true;
+
+                                joystick.setPointerCapture(event.pointerId);
+                                });
+
+
+                                joystick.addEventListener('pointermove', (event) => {
+                                    event.preventDefault();
+                                        event.stopPropagation();
+
+                                            if (!joystickActive) return;
+
+                                                const rect = joystick.getBoundingClientRect();
+
+                                                    let x = event.clientX - (rect.left + 60);
+                                                        let y = event.clientY - (rect.top + 60);
+
+                                                            const maxDistance = 35;
+
+                                                                const distance = Math.sqrt(
+                                                                        x * x + y * y
+                                                                            );
+
+                                                                                if (distance > maxDistance) {
+                                                                                        x = (x / distance) * maxDistance;
+                                                                                                y = (y / distance) * maxDistance;
+                                                                                                    }
+
+
+                                                                                                        joystickKnob.style.left =
+                                                                                                                `${35 + x}px`;
+
+                                                                                                                    joystickKnob.style.top =
+                                                                                                                            `${35 + y}px`;
+
+
+                                                                                                                                moveDirection.set(
+                                                                                                                                        x / maxDistance,
+                                                                                                                                                0,
+                                                                                                                                                        y / maxDistance
+                                                                                                                                                            );
+
+                                                                                                                                                                moveDirection.normalize();
+
+                                                                                                                                                                    moveSpeed = 2;
+                                                                                                                                                                    });
+
+
+                                                                                                                                                                    function stopJoystick(event) {
+
+                                                                                                                                                                        if (event) {
+                                                                                                                                                                                event.preventDefault();
+                                                                                                                                                                                        event.stopPropagation();
+                                                                                                                                                                                            }
+
+                                                                                                                                                                                                joystickActive = false;
+
+                                                                                                                                                                                                    joystickKnob.style.left = '35px';
+                                                                                                                                                                                                        joystickKnob.style.top = '35px';
+
+                                                                                                                                                                                                            moveSpeed = 0;
+
+                                                                                                                                                                                                                moveDirection.set(
+                                                                                                                                                                                                                        0,
+                                                                                                                                                                                                                                0,
+                                                                                                                                                                                                                                        0
+                                                                                                                                                                                                                                            );
+                                                                                                                                                                                                                                            }
+
+
+                                                                                                                                                                                                                                            joystick.addEventListener(
+                                                                                                                                                                                                                                                'pointerup',
+                                                                                                                                                                                                                                                    stopJoystick
+                                                                                                                                                                                                                                                    );
+
+                                                                                                                                                                                                                                                    joystick.addEventListener(
+                                                                                                                                                                                                                                                        'pointercancel',
+                                                                                                                                                                                                                                                            stopJoystick
+                                                                                                                                                                                                                                                            );
                 window.addEventListener('resize', () => {
                   camera.aspect = window.innerWidth / window.innerHeight;
                     camera.updateProjectionMatrix();
