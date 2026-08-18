@@ -127,6 +127,7 @@ const camera = new THREE.PerspectiveCamera(
                                                     animationMixer = new THREE.AnimationMixer(fireEye.scene);
 
                                                         const action = animationMixer.clipAction(clip);
+                                                        window.fireEyeWalkAction = action;
                                                             action.play();
                                                             
                                                                 console.log('FireEye animation started!');
@@ -362,13 +363,15 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                                                                                         joystickKnob.style.top = '35px';
 
                                                                                                                                                                                                             moveSpeed = 0;
+                                                                                                                                                                                            
+                                                                                                                                                                                                            }
 
                                                                                                                                                                                                                 moveDirection.set(
                                                                                                                                                                                                                         0,
                                                                                                                                                                                                                                 0,
                                                                                                                                                                                                                                         0
                                                                                                                                                                                                                                             );
-                                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                            
 
 
                                                                                                                                                                                                                                             joystick.addEventListener(
