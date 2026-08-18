@@ -46,6 +46,40 @@ const camera = new THREE.PerspectiveCamera(
           sunLight.position.set(20, 8, -30);
           scene.add(sunLight);
 
+          const sunCanvas = document.createElement('canvas');
+          sunCanvas.width = 256;
+          sunCanvas.height = 256;
+
+          const sunContext = sunCanvas.getContext('2d');
+
+          const sunGradient = sunContext.createRadialGradient(
+              128, 128, 20,
+                  128, 128, 128
+                  );
+
+                  sunGradient.addColorStop(0, 'rgba(255, 245, 190, 1)');
+                  sunGradient.addColorStop(0.25, 'rgba(255, 210, 110, 0.95)');
+                  sunGradient.addColorStop(0.55, 'rgba(255, 170, 70, 0.35)');
+                  sunGradient.addColorStop(1, 'rgba(255, 150, 50, 0)');
+
+                  sunContext.fillStyle = sunGradient;
+                  sunContext.fillRect(0, 0, 256, 256);
+
+                  const sunTexture = new THREE.CanvasTexture(sunCanvas);
+
+                  const sunMaterial = new THREE.SpriteMaterial({
+                      map: sunTexture,
+                          transparent: true,
+                              depthWrite: false
+                              });
+
+                              const sun = new THREE.Sprite(sunMaterial);
+
+                              sun.scale.set(3, 3, 1);
+                              sun.position.set(43, 5, -40);
+
+                              scene.add(sun);
+
           const skyGeometry = new THREE.SphereGeometry(80, 32, 32);
 
           const skyMaterial = new THREE.MeshBasicMaterial({
