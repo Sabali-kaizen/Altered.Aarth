@@ -70,6 +70,14 @@ const camera = new THREE.PerspectiveCamera(
                 });
 
                   let fireEye = null;
+                  let moveSpeed = 0;
+                  let moveDirection = new THREE.Vector3();
+
+                  moveDirection.set(0, 0, -1);
+
+                  let idleAnimation = null;
+                  let walkAnimation = null;
+                  let runAnimation = null;
                   let fireEyeAnimation = null;
                   let animationMixer = null;
 
@@ -88,6 +96,18 @@ const camera = new THREE.PerspectiveCamera(
 
                                                                 console.log('FireEye animation started!');
                                                                 }
+
+                                                                function updateFireEyeMovement(deltaTime) {
+                                                                      if (!fireEye) return;
+
+                                                                          if (moveSpeed > 0) {
+                                                                                  fireEye.scene.position.addScaledVector(
+                                                                                              moveDirection,
+                                                                                                          moveSpeed * deltaTime
+                                                                                                                  );
+                                                                                                                      }
+                                                                                                                      }
+                                                                
                   loader.load(
                     '/avatar/FireEye.vrm',
                       (gltf) => {
@@ -124,6 +144,31 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                           console.error('VRMA_01 failed to load:', error);
                                                                                                                               }
                                                                                                                               );
+
+                                                                                                                              loader.load(
+                                                                                                                                    '/animations/Walking.vrma',
+                                                                                                                                        (gltf) => {
+                                                                                                                                                walkAnimation = gltf.userData.vrmAnimations[0];
+                                                                                                                                                        console.log('Walking animation loaded!');
+                                                                                                                                                            },
+                                                                                                                                                                undefined,
+                                                                                                                                                                    (error) => {
+                                                                                                                                                                            console.error('Walking animation failed to load:', error);
+                                                                                                                                                                                }
+                                                                                                                                                                                );
+
+                                                                                                                                                                                loader.load(
+                                                                                                                                                                                      '/animations/Running.vrma',
+                                                                                                                                                                                          (gltf) => {
+                                                                                                                                                                                                  runAnimation = gltf.userData.vrmAnimations[0];
+                                                                                                                                                                                                          console.log('Running animation loaded!');
+                                                                                                                                                                                                              },
+                                                                                                                                                                                                                  undefined,
+                                                                                                                                                                                                                      (error) => {
+                                                                                                                                                                                                                              console.error('Running animation failed to load:', error);
+                                                                                                                                                                                                                                  }
+                                                                                                                                                                                                                                  );
+                                                                                                                                                                                
                                                                             
           const groundGeometry = new THREE.PlaneGeometry(100, 100);
           const groundMaterial = new THREE.MeshStandardMaterial({
@@ -154,6 +199,8 @@ const camera = new THREE.PerspectiveCamera(
             if (fireEye) {
               fireEye.update(deltaTime);
             }
+
+            updateFireEyeMovement(deltaTime);
 
             renderer.render(scene, camera);
          }
