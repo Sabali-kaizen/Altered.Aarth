@@ -42,6 +42,10 @@ const camera = new THREE.PerspectiveCamera(
           horizonLight.position.set(0, 4, -20);
           scene.add(horizonLight);
 
+          const sunLight = new THREE.DirectionalLight(0xfff1c1, 2.0);
+          sunLight.position.set(20, 8, -30);
+          scene.add(sunLight);
+
           const skyGeometry = new THREE.SphereGeometry(80, 32, 32);
 
           const skyMaterial = new THREE.MeshBasicMaterial({
