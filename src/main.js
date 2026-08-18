@@ -113,7 +113,7 @@ const camera = new THREE.PerspectiveCamera(
                                                                           );
 
                                                                             loader.load(
-                                                                                  '/animations/Walking.vrma',
+                                                                                  '/animations/Idle.vrma',
                                                                                       (gltf) => {
                                                                                               fireEyeAnimation = gltf.userData.vrmAnimations[0];
                                                                                               playFireEyeAnimation();
