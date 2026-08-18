@@ -11,7 +11,7 @@ scene.background = new THREE.Color(0x12051f);
 scene.fog = new THREE.FogExp2(0x12051f, 0.018);
 
 const camera = new THREE.PerspectiveCamera(
-  60,
+  68,
     window.innerWidth / window.innerHeight,
       0.1,
         1000
@@ -123,7 +123,7 @@ const camera = new THREE.PerspectiveCamera(
                         if (!fireEye || !fireEyeAnimation) return;
 
                             const clip = createVRMAnimationClip(
-                                    fireEyeAnimation,
+                                    walkAnimation,
                                             fireEye
                                                 );
 
@@ -211,7 +211,7 @@ const camera = new THREE.PerspectiveCamera(
           const groundGeometry = new THREE.PlaneGeometry(100, 100);
           const groundMaterial = new THREE.MeshStandardMaterial({
             color: 0x17121f,
-              roughness: 1
+              roughness: 80
               });
 
               const ground = new THREE.Mesh(
@@ -240,8 +240,13 @@ const camera = new THREE.PerspectiveCamera(
 
             updateFireEyeMovement(deltaTime);
 
+            if (animationMixer) {
+                  animationMixer.update(clock.getDelta());
+                  }
+            
+
             renderer.render(scene, camera);
-         }
+          }
 
                 animate();
 
