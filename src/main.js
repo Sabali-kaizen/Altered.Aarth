@@ -1,4 +1,5 @@
 import './loading.css';
+import './disclaimer.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
@@ -37,6 +38,10 @@ loadingScreen.innerHTML = `
 
                                                 if (loadingProgress >= 100) {
                                                         clearInterval(loadingTimer);
+
+                                                        loadingScreen.style.display = 'none';
+
+                                                        showDisclaimer();
                                                             }
                                                             }, 100);
 
@@ -478,3 +483,17 @@ const camera = new THREE.PerspectiveCamera(
 
                       renderer.setSize(window.innerWidth, window.innerHeight);
                       });
+
+                      function showDisclaimer() {
+                            const disclaimer = document.createElement('div');
+
+                                disclaimer.id = 'disclaimer-screen';
+
+                                    disclaimer.innerHTML = `
+                                            <h1>DISCLAIMER</h1>
+                                                    <button>CONTINUE</button>
+                                                        `;
+
+                                                            document.body.appendChild(disclaimer);
+                                                            }
+                      
