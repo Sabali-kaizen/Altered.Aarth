@@ -1,3 +1,4 @@
+import './loading.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
@@ -6,6 +7,43 @@ import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-v
 import * as VRMAnimation from '@pixiv/three-vrm-animation';
 import { deltaTime } from 'three/tsl';
 
+const loadingScreen = document.createElement('div');
+
+loadingScreen.id = 'loading-screen';
+
+loadingScreen.innerHTML = `
+    <div id="loading-text"></div>
+        <div id="loading-dots">
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                <div class="loading-dot"></div>
+                    </div>
+                    `;
+
+                    document.body.appendChild(loadingScreen);
+
+                    let loadingProgress = 0;
+
+                    const loadingDots = document.querySelectorAll('.loading-dot');
+
+                    const loadingTimer = setInterval(() => {
+                        loadingProgress += 1;
+
+                            const activeDots = Math.ceil(loadingProgress / 33.34);
+
+                                loadingDots.forEach((dot, index) => {
+                                        dot.classList.toggle('active', index < activeDots);
+                                            });
+
+                                                if (loadingProgress >= 100) {
+                                                        clearInterval(loadingTimer);
+                                                            }
+                                                            }, 100);
+
+                    setTimeout(() => {
+                            loadingScreen.classList.add('show-loading');
+                            }, 2000);
+                    
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x12051f);
 scene.fog = new THREE.FogExp2(0x12051f, 0.018);
@@ -110,7 +148,7 @@ const camera = new THREE.PerspectiveCamera(
                   let fireEye = null;
                   let moveSpeed = 0;
                   let moveDirection = new THREE.Vector3();
-                  let idleAnimation = null;
+                  let ninja_idleAnimation = null;
                   let walkAnimation = null;
                   let runAnimation = null;
                   let fireEyeAnimation = null;
@@ -127,8 +165,9 @@ const camera = new THREE.PerspectiveCamera(
                                                     animationMixer = new THREE.AnimationMixer(fireEye.scene);
 
                                                         const action = animationMixer.clipAction(clip);
-                                                        window.fireEyeWalkAction = action;
+                                                        window.fireEyeIdleAction = action;
                                                             action.play();
+                                                            
                                                             
                                                                 console.log('FireEye animation started!');
                                                                 }
@@ -174,15 +213,14 @@ const camera = new THREE.PerspectiveCamera(
                                                                           );
 
                                                                             loader.load(
-                                                                                  '/animations/Idle.vrma',
+                                                                                  '/animations/Ninja_Idle.vrma',
                                                                                       (gltf) => {
                                                                                               fireEyeAnimation = gltf.userData.vrmAnimations[0];
-                                                                                              playFireEyeAnimation();
-                                                                                                      console.log('VRMA_01 loaded:', fireEyeAnimation);
+                                                                                                      console.log('Ninja_Idle animation loaded:', fireEyeAnimation);
                                                                                                           },
                                                                                                               undefined,
                                                                                                                   (error) => {
-                                                                                                                          console.error('VRMA_01 failed to load:', error);
+                                                                                                                          console.error('Ninja_Idle animation failed to load:', error);
                                                                                                                               }
                                                                                                                               );
 
@@ -211,7 +249,7 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                                                                                                                   );
                                                                                                                                                                                 
                                                                             
-          const groundGeometry = new THREE.PlaneGeometry(100, 100);
+          const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
           const groundMaterial = new THREE.MeshStandardMaterial({
             color: 0x17121f,
               roughness: 80
@@ -221,6 +259,57 @@ const camera = new THREE.PerspectiveCamera(
                 groundGeometry,
                   groundMaterial
                   );
+
+                  // 🌱 GRASS FIELD
+
+                  const grassGeometry = new THREE.ConeGeometry(0.035, 0.8, 3);
+                  grassGeometry.translate(0, 0.4, 0);
+
+                  const grassMaterial = new THREE.MeshStandardMaterial({
+                      color: 0x3f7d20,
+                          roughness: 1,
+                              metalness: 0
+                              });
+
+                              const grassCount = 80000;
+
+                              const grassField = new THREE.InstancedMesh(
+                                  grassGeometry,
+                                      grassMaterial,
+                                          grassCount
+                                          );
+
+                                          const grassDummy = new THREE.Object3D();
+
+                                          for (let i = 0; i < grassCount; i++) {
+
+                                              const x = (Math.random() - 0.5) * 100;
+                                                  const z = (Math.random() - 0.5) * 100;
+
+                                                      const height = 0.6 + Math.random() * 0.8;
+                                                          const width = 0.7 + Math.random() * 0.6;
+
+                                                              grassDummy.position.set(x, 0, z);
+
+                                                                  grassDummy.rotation.y = Math.random() * Math.PI * 2;
+
+                                                                      grassDummy.scale.set(
+                                                                              width,
+                                                                                      height,
+                                                                                              width
+                                                                                                  );
+
+                                                                                                      grassDummy.updateMatrix();
+
+                                                                                                          grassField.setMatrixAt(
+                                                                                                                  i,
+                                                                                                                          grassDummy.matrix
+                                                                                                                              );
+                                                                                                                              }
+
+                                                                                                                              grassField.instanceMatrix.needsUpdate = true;
+
+                                                                                                                              scene.add(grassField);
 
                   ground.rotation.x = -Math.PI / 2;
                   ground.position.y = 0;
