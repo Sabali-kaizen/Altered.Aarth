@@ -1,0 +1,35 @@
+#main-menu {
+        position: fixed;
+            inset: 0;
+                z-index: 100000;
+
+                    display: flex;
+                        align-items: center;
+                            justify-content: center;
+
+                                background: #080509;
+                                }
+
+                                .menu-curtain {
+                                    width: min(520px, 85vw);
+
+                                        display: flex;
+                                            flex-direction: column;
+                                                gap: 18px;
+                                                }
+
+                                                .menu-card {
+                                                    padding: 22px 30px;
+
+                                                        background: rgba(15, 12, 17, 0.92);
+                                                            border: 1px solid rgba(238, 233, 223, 0.25);
+                                                                border-radius: 14px;
+
+                                                                    color: #eee9df;
+                                                                        font-size: 18px;
+                                                                            font-weight: bold;
+                                                                                letter-spacing: 4px;
+                                                                                    text-align: center;
+
+                                                                                        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+                                                                                        }

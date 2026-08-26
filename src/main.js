@@ -1,13 +1,14 @@
 import './loading.css';
 import './disclaimer.css';
-import './account.css';
+import './mainmenu.css';
+import { supabase } from './supabase.js';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
 import { PLYLoader } from 'three/examples/jsm/Addons.js';
 import { VRMAnimationLoaderPlugin, createVRMAnimationClip } from '@pixiv/three-vrm-animation';
 import * as VRMAnimation from '@pixiv/three-vrm-animation';
-import { deltaTime } from 'three/tsl';
+import { deltaTime, pass } from 'three/tsl';
 
 const loadingScreen = document.createElement('div');
 
@@ -526,7 +527,7 @@ const camera = new THREE.PerspectiveCamera(
 
                                                             setTimeout(() => {
                                                                     disclaimer.remove();
-                                                                        showCreateAccount();
+                                                                        showMainMenu();
                                                                         }, 10000);
                                                             }
 
@@ -539,8 +540,10 @@ const camera = new THREE.PerspectiveCamera(
                                                                                     <div class="account-content">
                                                                                                 <h1>CREATE ACCOUNT</h1>
 
+                                                                                                <input type="email" placehoder="EMAIL">
                                                                                                             <input type="text" placeholder="USERNAME">
                                                                                                                         <input type="password" placeholder="PASSWORD">
+                                                                                                                            <input type="password" placeholder="CONFIRM PASSWORD">
 
                                                                                                                                     <button>CREATE ACCOUNT</button>
 
@@ -549,6 +552,60 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                                             `;
 
                                                                                                                                                                 document.body.appendChild(accountScreen);
-                                                                                                                                                                }
+
+                                                                                                                                                                const createAccountButton = accountScreen.querySelector('button');
+
+                                                                                                                                                                createAccountButton.addEventListener('click', async () => {
+                                                                                                                                                                    const inputs = accountScreen.querySelectorAll('input');
+
+                                                                                                                                                                    const email = inputs[0].value.trim();
+
+                                                                                                                                                                        const username = inputs[1].value.trim();
+                                                                                                                                                                            const password = inputs[2].value;
+                                                                                                                                                                            const confirmPassword = inputs[3].value;
+
+                                                                                                                                                                                if (!email || !username || !password || !confirmPassword) {
+                                                                                                                                                                                        alert('Please complete all fields.');
+                                                                                                                                                                                                return;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    if (password !== confirmPassword) {alert('passwords do not match.');
+                                                                                                                                                                                                        return;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                            const { data, error } = await supabase.auth.signUp({
+                                                                                                                                                                                                                    email: email,
+                                                                                                                                                                                                                            password: password,
+                                                                                                                                                                                                                            options: {
+                                                                                                                                                                                                                                data: {
+                                                                                                                                                                                                                                    username: username
+                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                            }
+                                                                                                                                                                                                                                });
+
+                                                                                                                                                                                                                                    if (error) {
+                                                                                                                                                                                                                                            alert(error.message);
+                                                                                                                                                                                                                                                    return;
+                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                            alert('Account created successfully!');
+                                                                                                                                                                                                                                                            });
+
+                                                                                                                                                                                                                                                            function showMainMenu() {
+                                                                                                                                                                                                                                                                    const menu = document.createElement('div');
+
+                                                                                                                                                                                                                                                                        menu.id = 'main-menu';
+
+                                                                                                                                                                                                                                                                            menu.innerHTML = `
+                                                                                                                                                                                                                                                                                    <div class="menu-curtain">
+                                                                                                                                                                                                                                                                                                <div class="menu-card new-game">NEW GAME</div>
+                                                                                                                                                                                                                                                                                                            <div class="menu-card load-game">LOAD GAME</div>
+                                                                                                                                                                                                                                                                                                                        <div class="menu-card settings">SETTINGS</div>
+                                                                                                                                                                                                                                                                                                                                    <div class="menu-card quit-game">QUIT GAME</div>
+                                                                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                                                                                `;
+
+                                                                                                                                                                                                                                                                                                                                                    document.body.appendChild(menu);
+                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                            }
+                                                                                                                                                                
                                                             
                       
