@@ -490,8 +490,36 @@ const camera = new THREE.PerspectiveCamera(
                                 disclaimer.id = 'disclaimer-screen';
 
                                     disclaimer.innerHTML = `
-                                            <h1>DISCLAIMER</h1>
-                                                    <button>CONTINUE</button>
+                                            <div class="disclaimer-content">
+                                                <h1></h1>
+
+                                                    <p>
+                                                            AARTH 101 is a fictional interactive experience created
+                                                                    for entertainment purposes. All characters, names,
+                                                                            organizations, locations, events, timelines and situations
+                                                                                    portrayed within the game are fictional unless otherwise
+                                                                                            clearly stated.
+                                                                                                </p>
+
+                                                                                                    <p>
+                                                                                                            Any resemblance to actual persons, living or deceased,
+                                                                                                                    real organizations, places or events is purely coincidental
+                                                                                                                            or used within the fictional context of the game.
+                                                                                                                                </p>
+
+                                                                                                                                    <p>
+                                                                                                                                            AARTH 101 contains fictional violence, combat, destruction,
+                                                                                                                                                    death, intense situations and mature themes. Some scenes
+                                                                                                                                                            may contain imagery or situations that certain players
+                                                                                                                                                                    may find disturbing, frightening or uncomfortable.
+                                                                                                                                                                        </p>
+
+                                                                                                                                                                            <p>
+                                                                                                                                                                                    Player discretion is advised. The content presented within
+                                                                                                                                                                                            the game does not represent real-world instructions,
+                                                                                                                                                                                                    encouragement or endorsement of violence or harmful behavior.
+                                                                                                                                                                                                        </p>
+                                                                                                                                                                                                        </div>
                                                         `;
 
                                                             document.body.appendChild(disclaimer);

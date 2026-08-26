@@ -3,7 +3,7 @@
             inset: 0;
                 z-index: 100000;
 
-                    background: #080509;
+                    background: #080509 url('/disclaimer_screen.png') center center / cover no-repeat;
 
                         display: flex;
                             align-items: center;
@@ -29,6 +29,7 @@
                                                                     font-size: 16px;
                                                                         line-height: 1.8;
                                                                             color: #b9b2a8;
+                                                                            font-weight: bold;
                                                                             }
 
                                                                             #disclaimer-accept {
