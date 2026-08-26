@@ -1,5 +1,6 @@
 import './loading.css';
 import './disclaimer.css';
+import './account.css';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VRMLoaderPlugin } from '@pixiv/three-vrm';
@@ -521,7 +522,33 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                                                                                         </p>
                                                                                                                                                                                                         </div>
                                                         `;
-
                                                             document.body.appendChild(disclaimer);
+
+                                                            setTimeout(() => {
+                                                                    disclaimer.remove();
+                                                                        showCreateAccount();
+                                                                        }, 10000);
                                                             }
+
+                                                            function showCreateAccount() {
+                                                                    const accountScreen = document.createElement('div');
+
+                                                                        accountScreen.id = 'account-screen';
+
+                                                                            accountScreen.innerHTML = `
+                                                                                    <div class="account-content">
+                                                                                                <h1>CREATE ACCOUNT</h1>
+
+                                                                                                            <input type="text" placeholder="USERNAME">
+                                                                                                                        <input type="password" placeholder="PASSWORD">
+
+                                                                                                                                    <button>CREATE ACCOUNT</button>
+
+                                                                                                                                                <p>Already have an account? LOGIN</p>
+                                                                                                                                                        </div>
+                                                                                                                                                            `;
+
+                                                                                                                                                                document.body.appendChild(accountScreen);
+                                                                                                                                                                }
+                                                            
                       

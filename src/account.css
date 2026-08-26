@@ -1,0 +1,47 @@
+#account-screen {
+        position: fixed;
+            inset: 0;
+                z-index: 100000;
+
+                    background: #080509 url('/account_screen.png') center center / cover no-repeat;
+
+                        display: flex;
+                            align-items: center;
+                                justify-content: center;
+                                }
+
+                                .account-content {
+                                    width: min(420px, 85vw);
+                                        text-align: center;
+                                            color: #eee9df;
+                                            }
+
+                                            .account-content h1 {
+                                                letter-spacing: 5px;
+                                                    margin-bottom: 35px;
+                                                    }
+
+                                                    .account-content input {
+                                                        display: block;
+                                                            width: 100%;
+                                                                box-sizing: border-box;
+
+                                                                    margin: 12px 0;
+                                                                        padding: 14px;
+
+                                                                            background: rgba(0,0,0,0.45);
+                                                                                border: 1px solid #4b3a40;
+
+                                                                                    color: #eee9df;
+                                                                                    }
+
+                                                                                    .account-content button {
+                                                                                        margin-top: 20px;
+                                                                                            padding: 13px 35px;
+
+                                                                                                background: transparent;
+                                                                                                    border: 1px solid #70402f;
+                                                                                                        color: #eee9df;
+
+                                                                                                            letter-spacing: 2px;
+                                                                                                            }
