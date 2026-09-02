@@ -165,7 +165,7 @@ const camera = new THREE.PerspectiveCamera(
                         if (!fireEye || !fireEyeAnimation) return;
 
                             const clip = createVRMAnimationClip(
-                                    walkAnimation,
+                                    fireEyeAnimation,
                                             fireEye
                                                 );
 
