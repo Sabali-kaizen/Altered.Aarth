@@ -348,10 +348,6 @@ const camera = new THREE.PerspectiveCamera(
 
             updateFireEyeMovement(deltaTime);
 
-            if (animationMixer) {
-                  animationMixer.update(clock.getDelta());
-                  }
-
                   if (fireEye) {
                         camera.position.x = fireEye.scene.position.x;
                             camera.position.z = fireEye.scene.position.z + 4;
