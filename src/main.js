@@ -171,10 +171,19 @@ const camera = new THREE.PerspectiveCamera(
 
                                                     animationMixer = new THREE.AnimationMixer(fireEye.scene);
 
-                                                        const action = animationMixer.clipAction(clip);
-                                                        window.fireEyeIdleAction = action;
-                                                            action.play();
-                                                            
+                                                        const idleAction = animationMixer.clipAction(clip);
+                                                        window.fireEyeIdleAction = idleAction;
+                                                        idleAction.play();
+
+                                                        if (walkAnimation) {
+                                                            const walkClip = createVRMAnimationClip(
+                                                                    walkAnimation,
+                                                                            fireEye
+                                                                                );
+
+                                                                                    const walkAction = animationMixer.clipAction(walkClip);
+                                                                                        window.fireEyeWalkAction = walkAction;
+                                                                                        }
                                                             
                                                                 console.log('FireEye animation started!');
                                                                 }
@@ -235,11 +244,11 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                     '/animations/Walking.vrma',
                                                                                                                                         (gltf) => {
                                                                                                                                                 walkAnimation = gltf.userData.vrmAnimations[0];
-                                                                                                                                                        console.log('Walking animation loaded!');
+                                                                                                                                                        console.log('Sneak_Walk animation loaded!');
                                                                                                                                                             },
                                                                                                                                                                 undefined,
                                                                                                                                                                     (error) => {
-                                                                                                                                                                            console.error('Walking animation failed to load:', error);
+                                                                                                                                                                            console.error('Sneak_Walk animation failed to load:', error);
                                                                                                                                                                                 }
                                                                                                                                                                                 );
 
@@ -345,7 +354,7 @@ const camera = new THREE.PerspectiveCamera(
 
                   if (fireEye) {
                         camera.position.x = fireEye.scene.position.x;
-                            camera.position.z = fireEye.scene.position.z + 12;
+                            camera.position.z = fireEye.scene.position.z + 4;
 
                                 camera.lookAt(
                                         fireEye.scene.position.x,
@@ -442,8 +451,17 @@ const camera = new THREE.PerspectiveCamera(
 
                                                                                                                                                                 moveDirection.normalize();
 
-                                                                                                                                                                    moveSpeed = 2;
-                                                                                                                                                                    });
+                                                                                                                                                                    moveSpeed = 1;
+
+                                                                                                                                                                    if (window.fireEyeIdleAction) {
+                                                                                                                                                                            window.fireEyeIdleAction.stop();
+                                                                                                                                                                            }
+
+                                                                                                                                                                            if (window.fireEyeWalkAction && !window.fireEyeWalkAction.isRunning()) {
+                                                                                                                                                                                window.fireEyeWalkAction.play();
+                                                                                                                                                                                }
+                                                                                                                                                                    }
+                                                                                                                                                                    );
 
 
                                                                                                                                                                     function stopJoystick(event) {
@@ -459,17 +477,21 @@ const camera = new THREE.PerspectiveCamera(
                                                                                                                                                                                                         joystickKnob.style.top = '35px';
 
                                                                                                                                                                                                             moveSpeed = 0;
-                                                                                                                                                                                            
-                                                                                                                                                                                                            }
-
                                                                                                                                                                                                                 moveDirection.set(
                                                                                                                                                                                                                         0,
                                                                                                                                                                                                                                 0,
                                                                                                                                                                                                                                         0
                                                                                                                                                                                                                                             );
+                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                            if (window.fireEyeWalkAction) {
+                                                                                                                                                                                                                                                    window.fireEyeWalkAction.stop();
+                                                                                                                                                                                                                                                    }
+
+                                                                                                                                                                                                                                                    if (window.fireEyeIdleAction) {
+                                                                                                                                                                                                                                                        window.fireEyeIdleAction.play();
+                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                    }
                                                                                                                                                                                                                                             
-
-
                                                                                                                                                                                                                                             joystick.addEventListener(
                                                                                                                                                                                                                                                 'pointerup',
                                                                                                                                                                                                                                                     stopJoystick
